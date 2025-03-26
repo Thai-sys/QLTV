@@ -22,11 +22,10 @@ class AuthService {
   }
 
   async checkEmail(email) {
-
     try {
       const docGiaCollection = await this.getCollection("docgia");
       const user = await docGiaCollection.findOne({ email: email });
-     
+
       return user !== null;
     } catch (error) {
       console.error("Error in checkEmail service:", error.stack);
@@ -59,7 +58,6 @@ class AuthService {
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
- 
 
       return isMatch ? user : null;
     } catch (error) {
@@ -78,9 +76,9 @@ class AuthService {
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
- 
-
-      return isMatch ? user : null;
+      console.log(user);
+      // Nếu mật khẩu đúng, trả về hoTen và role
+      return isMatch ? { hoTen: user.hoTen, role: user.role } : null;
     } catch (error) {
       throw new Error("Lỗi khi xác thực nhân viên: " + error.message);
     }

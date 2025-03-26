@@ -25,7 +25,7 @@ const usersRouter = require("./app/routes/user.route");
 const categorysRouter = require("./app/routes/category.route");
 const publishersRouter = require("./app/routes/publisher.route");
 const borrowservicesRouter = require("./app/routes/borrow.route");
-
+const employeesRouter = require("./app/routes/employee.route");
 // app.get("/", (req, res) => {
 //   res.json({ message: "Welcome to contact booj application." });
 // });
@@ -41,7 +41,7 @@ app.use("/api/user", usersRouter);
 app.use("/api/category", categorysRouter);
 app.use("/api/publisher", publishersRouter);
 app.use("/api/borrow_service", borrowservicesRouter);
-
+app.use("/api/employee", employeesRouter);
 
 app.use((req, res, next) => {
   return next(new ApiError(404, "Not found"));
