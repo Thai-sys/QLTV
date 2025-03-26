@@ -26,6 +26,18 @@
         >
           Quản lý dịch vụ mượn sách
         </li>
+        <li
+          @click="activeComponent = 'Publisher'"
+          :class="{ active: activeComponent === 'Publisher' }"
+        >
+          Quản lý nhà xuất bản
+        </li>
+        <li
+          @click="activeComponent = 'Employee'"
+          :class="{ active: activeComponent === 'Employee' }"
+        >
+          Quản lý nhân viên
+        </li>
       </ul>
 
       <!-- Đăng xuất -->
@@ -44,19 +56,18 @@
           }
         "
       />
-
       <Service v-if="activeComponent === 'Service'" />
+      <Publisher v-if="activeComponent === 'Publisher'" />
+      <Employee v-if="activeComponent === 'Employee'" />
       <AddBook
         v-if="activeComponent === 'AddBook'"
         @changeComponent="handleComponentChange"
       />
-
       <EditBook
-  v-if="activeComponent === 'EditBook'"
-  :book="editedBook"
-  @changeComponent="activeComponent = 'Book'"
-/>
-
+        v-if="activeComponent === 'EditBook'"
+        :book="editedBook"
+        @changeComponent="activeComponent = 'Book'"
+      />
     </main>
   </div>
 </template>
@@ -66,17 +77,32 @@ import Cookies from "js-cookie";
 import User from "@/components/admindashboard/admin_user.vue";
 import Book from "@/components/admindashboard/admin_book.vue";
 import Service from "@/components/admindashboard/admin_service.vue";
+import Publisher from "@/components/admindashboard/admin_publisher.vue";
+import Employee from "@/components/admindashboard/admin_employee.vue";
 import AddBook from "@/components/admindashboard/admin_addbook.vue";
 import EditBook from "@/components/admindashboard/admin_editbook.vue";
+
 export default {
-  components: { User, Book, Service, AddBook, EditBook },
+  components: { User, Book, Service, Publisher, Employee, AddBook, EditBook },
   data() {
     return {
       activeComponent: "User",
       editedBook: null, // Lưu sách cần sửa
     };
   },
+  created() {
+    this.checkAdminAccess();
+  },
   methods: {
+     checkAdminAccess() {
+      const adminInfo = JSON.parse(localStorage.getItem("adminRole"));
+
+      // Kiểm tra nếu không có thông tin hoặc không phải admin thì chuyển hướng về login
+      if (!adminInfo || adminInfo.role !== "admin") {
+        alert("Bạn không có quyền truy cập trang này!");
+        this.$router.push("/userlogin"); // Điều hướng về trang login
+      }
+    },
     handleLogout() {
       Cookies.remove("accessToken");
       this.$router.push("/userlogin");
@@ -88,6 +114,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Định dạng container tổng */

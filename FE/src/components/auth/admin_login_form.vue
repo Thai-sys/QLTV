@@ -77,7 +77,6 @@ export default {
       }
       try {
         const response = await axios.post(
-            
           "http://localhost:3000/api/auth/adminlogin",
           {
             email: this.email,
@@ -85,6 +84,10 @@ export default {
           },
           { withCredentials: true }
         );
+        
+        if (response.data && response.data.user.role === "admin") {
+          localStorage.setItem("adminRole", JSON.stringify(response.data.user));
+        }
         Swal.fire({
           icon: "success",
           title: "Đăng nhập thành công!",
@@ -92,9 +95,8 @@ export default {
           timer: 2000,
           showConfirmButton: false,
         });
-        
-          this.$router.push("/admindashboard");
-        
+
+        this.$router.push("/admindashboard");
       } catch (error) {
         Swal.fire({
           icon: "error",
